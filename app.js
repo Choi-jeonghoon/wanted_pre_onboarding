@@ -16,6 +16,7 @@ app.set('view engine', {
 sequelize
   .sync({ force: false }) // true 로 설정 시 서버 실행 시마다 테이블 재생성
   .then(() => {
+    
     console.log('데이터베이스 연결 성공');
   })
   .catch(err => {
