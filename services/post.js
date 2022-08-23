@@ -1,6 +1,6 @@
 const migrations = require('../migrations/post');
 
-const createPost = async (req, res) => {
+async function createPost(req, res) {
   try {
     const {
       company_id,
@@ -22,9 +22,9 @@ const createPost = async (req, res) => {
     console.log(error.message);
     res.status(error.statusCode || 500).json({ message: 'FAIL' });
   }
-};
+}
 
-const updatePost = async (req, res) => {
+async function updatePost(req, res) {
   try {
     const postId = req.params.postId;
     const {
@@ -47,9 +47,9 @@ const updatePost = async (req, res) => {
     console.log(error.message);
     res.status(error.statusCode || 500).json({ message: 'FAIL' });
   }
-};
+}
 
-const deletePost = async (req, res) => {
+async function deletePost(req, res) {
   try {
     const postId = req.params.postId;
 
@@ -60,9 +60,27 @@ const deletePost = async (req, res) => {
     console.log(error.message);
     res.status(error.statusCode || 500).json({ message: 'FAIL' });
   }
-};
+}
+async function searchViewPost(req, res) {
+  try {
+    const keyword = req.query.keyword;
+    let PostLists;
+
+    if (keyword) {
+      PostLists = await migrations.searchViewPostByKeyword(keyword);
+    } else {
+      PostLists = await migrations.searchViewPost();
+    }
+    console.log(PostLists);
+    res.status(200).json(PostLists);
+  } catch (error) {
+    console.log(error.message);
+    res.status(error.statusCode || 500).json({ message: 'FAIL' });
+  }
+}
 module.exports = {
   createPost,
   updatePost,
   deletePost,
+  searchViewPost,
 };

@@ -1,5 +1,11 @@
 const db = require('../models/index');
 const Post = db.post;
+const Company = db.company;
+const SQ = require('sequelize');
+const Sequelize = SQ.Sequelize;
+const sequelize = require('sequelize');
+const company = require('../models/company');
+const Op = sequelize.Op;
 
 async function createPost(
   company_id,
@@ -38,6 +44,7 @@ async function updatePost(
     },
   );
 }
+
 async function deletePost(postId) {
   return await Post.destroy({
     where: {
@@ -45,8 +52,61 @@ async function deletePost(postId) {
     },
   });
 }
+
+async function searchViewPostByKeyword(keyword) {
+  return await Post.findAll({
+    attributes: [
+      ['id', '채용공고_id'],
+      [Sequelize.col('company.company_name'), '회사이름'],
+      [Sequelize.col('company.country'), '국가'],
+      [Sequelize.col('company.region'), '지역'],
+      ['employ_position', '채용포지션'],
+      ['recruitment_compensation', '채용보상금'],
+      ['technology_stack', '사용기술'],
+    ],
+    include: [
+      {
+        model: company,
+
+        attributes: [],
+      },
+    ],
+    where: {
+      [Op.or]: [
+        { employ_position: { [Op.like]: '%' + keyword + '%' } },
+        { recruitment_compensation: { [Op.like]: '%' + keyword + '%' } },
+        { technology_stack: { [Op.like]: '%' + keyword + '%' } },
+        { '$company.company_name': { [Op.like]: '%' + keyword + '%' } },
+        { '$company.country': { [Op.like]: '%' + keyword + '%' } },
+        { '$company.region': { [Op.like]: '%' + keyword + '%' } },
+      ],
+    },
+  });
+}
+
+async function searchViewPost() {
+  return await Post.findAll({
+    attributes: [
+      ['id', '채용공고_id'],
+      [Sequelize.col('company.company_name'), '회사이름'],
+      [Sequelize.col('company.country'), '국가'],
+      [Sequelize.col('company.region'), '지역'],
+      ['employ_position', '채용포지션'],
+      ['recruitment_compensation', '채용보상금'],
+      ['technology_stack', '사용기술'],
+    ],
+    include: {
+      model: Company,
+      as: 'company',
+      attributes: [],
+    },
+  });
+}
+
 module.exports = {
   createPost,
   updatePost,
   deletePost,
+  searchViewPostByKeyword,
+  searchViewPost,
 };

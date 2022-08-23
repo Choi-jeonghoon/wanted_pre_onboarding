@@ -9,6 +9,6 @@ router.put('/post/:postId', postServices.updatePost);
 //삭제
 router.delete('/post/:postId', postServices.deletePost);
 //목록(검색)
-
+router.get('/post', postServices.searchViewPost);
 //상세 페이지
 module.exports = router;
