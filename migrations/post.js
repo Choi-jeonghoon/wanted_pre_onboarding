@@ -16,7 +16,30 @@ async function createPost(
     technology_stack: technology_stack,
   });
 }
-console.log();
+
+async function updatePost(
+  postId,
+  employ_position,
+  recruitment_compensation,
+  contents,
+  technology_stack,
+) {
+  return await Post.update(
+    {
+      employ_position: employ_position,
+      recruitment_compensation: recruitment_compensation,
+      contents: contents,
+      technology_stack: technology_stack,
+    },
+    {
+      where: {
+        id: postId,
+      },
+    },
+  );
+}
+
 module.exports = {
   createPost,
+  updatePost,
 };
