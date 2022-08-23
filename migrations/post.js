@@ -5,6 +5,7 @@ const SQ = require('sequelize');
 const Sequelize = SQ.Sequelize;
 const sequelize = require('sequelize');
 const company = require('../models/company');
+const post = require('../models/post');
 const Op = sequelize.Op;
 
 async function createPost(
@@ -66,8 +67,8 @@ async function searchViewPostByKeyword(keyword) {
     ],
     include: [
       {
-        model: company,
-
+        model: Company,
+        as: 'company',
         attributes: [],
       },
     ],
@@ -76,9 +77,6 @@ async function searchViewPostByKeyword(keyword) {
         { employ_position: { [Op.like]: '%' + keyword + '%' } },
         { recruitment_compensation: { [Op.like]: '%' + keyword + '%' } },
         { technology_stack: { [Op.like]: '%' + keyword + '%' } },
-        { '$company.company_name': { [Op.like]: '%' + keyword + '%' } },
-        { '$company.country': { [Op.like]: '%' + keyword + '%' } },
-        { '$company.region': { [Op.like]: '%' + keyword + '%' } },
       ],
     },
   });

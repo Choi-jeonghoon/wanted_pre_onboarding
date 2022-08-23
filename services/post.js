@@ -65,13 +65,12 @@ async function searchViewPost(req, res) {
   try {
     const keyword = req.query.keyword;
     let PostLists;
-
     if (keyword) {
       PostLists = await migrations.searchViewPostByKeyword(keyword);
+      console.log(keyword);
     } else {
       PostLists = await migrations.searchViewPost();
     }
-    console.log(PostLists);
     res.status(200).json(PostLists);
   } catch (error) {
     console.log(error.message);
