@@ -77,9 +77,42 @@ async function searchViewPost(req, res) {
     res.status(error.statusCode || 500).json({ message: 'FAIL' });
   }
 }
+
+const PostDetailByPostId = async (req, res) => {
+  try {
+    const postId = req.params.postId;
+
+    const post = await migrations.PostDetailByPostId(postId);
+
+    const otherPosts = await migrations.PostByCompanyId(
+      post.company.id,
+      postId,
+    );
+
+    const otherPost = otherPosts.map(obj => obj.id);
+
+    const result = {
+      채용공고_id: post.id,
+      회사명: post.company.company_name,
+      국가: post.company.country,
+      지역: post.company.region,
+      채용포지션: post.employ_position,
+      채용보상금: post.recruitment_compensation,
+      사용기술: post.technology_stack,
+      채용내용: post.contents,
+      회사가올린다른채용공고: otherPost,
+    };
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error.message);
+    res.status(error.statusCode || 500).json({ message: 'FAIL' });
+  }
+};
 module.exports = {
   createPost,
   updatePost,
   deletePost,
   searchViewPost,
+  PostDetailByPostId,
 };

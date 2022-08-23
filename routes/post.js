@@ -11,4 +11,5 @@ router.delete('/post/:postId', postServices.deletePost);
 //목록(검색)
 router.get('/post', postServices.searchViewPost);
 //상세 페이지
+router.get('/post/:postId', postServices.PostDetailByPostId);
 module.exports = router;

@@ -100,11 +100,40 @@ async function searchViewPost() {
     },
   });
 }
-
+async function PostDetailByPostId(PostId) {
+  return await Post.findOne({
+    attributes: [
+      'id',
+      'employ_position',
+      'recruitment_compensation',
+      'contents',
+      'technology_stack',
+    ],
+    include: {
+      model: Company,
+      as: 'company',
+      attributes: ['id', 'company_name', 'country', 'region'],
+    },
+    where: {
+      id: PostId,
+    },
+  });
+}
+async function PostByCompanyId(company_id, postId) {
+  return await Post.findAll({
+    attributes: ['id'],
+    where: {
+      company_id: company_id,
+      id: { [Op.not]: postId },
+    },
+  });
+}
 module.exports = {
   createPost,
   updatePost,
   deletePost,
   searchViewPostByKeyword,
   searchViewPost,
+  PostDetailByPostId,
+  PostByCompanyId,
 };
