@@ -17,7 +17,7 @@ const createPost = async (req, res) => {
       technology_stack,
     );
 
-    res.status(201).json({ message: 'SUCCESS' });
+    res.status(200).json({ message: 'SUCCESS' });
   } catch (error) {
     console.log(error.message);
     res.status(error.statusCode || 500).json({ message: 'FAIL' });
@@ -42,14 +42,27 @@ const updatePost = async (req, res) => {
       technology_stack,
     );
 
-    res.status(201).json({ message: 'SUCCESS' });
+    res.status(200).json({ message: 'SUCCESS' });
   } catch (error) {
     console.log(error.message);
     res.status(error.statusCode || 500).json({ message: 'FAIL' });
   }
 };
 
+const deletePost = async (req, res) => {
+  try {
+    const postId = req.params.postId;
+
+    await migrations.deletePost(postId);
+
+    res.status(200).json({ message: 'SUCCESS' });
+  } catch (error) {
+    console.log(error.message);
+    res.status(error.statusCode || 500).json({ message: 'FAIL' });
+  }
+};
 module.exports = {
   createPost,
   updatePost,
+  deletePost,
 };

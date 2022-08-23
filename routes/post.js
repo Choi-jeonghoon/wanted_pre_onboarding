@@ -7,7 +7,7 @@ router.post('/post', postServices.createPost);
 //수정
 router.put('/post/:postId', postServices.updatePost);
 //삭제
-
+router.delete('/post/:postId', postServices.deletePost);
 //목록(검색)
 
 //상세 페이지

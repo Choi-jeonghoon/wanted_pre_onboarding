@@ -38,8 +38,15 @@ async function updatePost(
     },
   );
 }
-
+async function deletePost(postId) {
+  return await Post.destroy({
+    where: {
+      id: postId,
+    },
+  });
+}
 module.exports = {
   createPost,
   updatePost,
+  deletePost,
 };
