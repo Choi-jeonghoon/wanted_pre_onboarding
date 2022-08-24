@@ -1,25 +1,22 @@
-'use strict';
-
 const Sequelize = require('sequelize');
-
+const initModels = require('./init-models');
 const env = process.env.NODE_ENV || 'development';
-const config = require('../config/config')[env];
-const db = {};
+const config = require('../config/config.json')[env];
 
 // 시퀄라이즈 MySQL 연결 객체 생성
 let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(
-    config.database,
-    config.username,
-    config.password,
-    config,
-  );
-}
 
+sequelize = new Sequelize(
+  config.database,
+  config.username,
+  config.password,
+  config,
+  {
+    host: config.host,
+    dialect: config.dialect,
+  },
+);
 // 연결 객체를 나중에 재사용하기 위함
-db.sequelize = sequelize;
+const db = initModels(sequelize);
 
 module.exports = db;

@@ -1,45 +1,29 @@
-const express = require('express');
-const path = require('path');
+const http = require('http');
+const cors = require('cors');
 const morgan = require('morgan');
-const nunjucks = require('nunjucks');
+const express = require('express');
+const routes = require('./routes/index');
+const bodyParser = require('body-parser');
+require('dotenv').config();
 
-const { sequelize } = require('./models');
-
+const corsOption = {
+  origin: '*',
+};
 const app = express();
-app.set('port', process.env.PORT || 10010);
-app.set('view engine', {
-  express: app,
-  watch: true,
-});
 
-// models/index.js 의 db.sequelize 를 불러와서 sync 메서드를 사용해 서버 실행 시 MySQL 과 연동되도록 함
-sequelize
-  .sync({ force: false }) // true 로 설정 시 서버 실행 시마다 테이블 재생성
-  .then(() => {
-    console.log('데이터베이스 연결 성공');
-  })
-  .catch(err => {
-    console.error('ERR~~', err);
-  });
-
+app.use(cors(corsOption));
 app.use(morgan('dev'));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json());
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-app.use((req, res, next) => {
-  const error = new Error(`${req.method} ${req.url} 라우터 없음`);
-  error.status = 404;
-  next(error);
+app.use(routes);
+// simple route for testing
+app.get('/', (req, res) => {
+  res.json({ message: 'Welcome to my application.' });
 });
 
-app.use((err, req, res, next) => {
-  res.locals.message = err.message;
-  res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
-  res.status(err.status || 500);
-  res.render('error');
-});
+const PORT = process.env.PORT || 10010;
+const server = http.createServer(app);
 
-app.listen(app.get('port'), () => {
-  console.log(app.get('port'), '번 포트에서 대기 중');
+server.listen(PORT, () => {
+  console.log(`server start PORT:${PORT}`);
 });
