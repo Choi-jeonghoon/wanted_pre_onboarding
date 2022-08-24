@@ -1,4 +1,4 @@
-const migrations = require('../migrations/post');
+const migrationsPost = require('../migrations/post');
 
 async function createPost(req, res) {
   try {
@@ -9,7 +9,7 @@ async function createPost(req, res) {
       contents,
       technology_stack,
     } = req.body;
-    await migrations.createPost(
+    await migrationsPost.createPost(
       company_id,
       employ_position,
       recruitment_compensation,
@@ -34,7 +34,7 @@ async function updatePost(req, res) {
       technology_stack,
     } = req.body;
 
-    await migrations.updatePost(
+    await migrationsPost.updatePost(
       postId,
       employ_position,
       recruitment_compensation,
@@ -53,7 +53,7 @@ async function deletePost(req, res) {
   try {
     const postId = req.params.postId;
 
-    await migrations.deletePost(postId);
+    await migrationsPost.deletePost(postId);
 
     res.status(200).json({ message: 'SUCCESS' });
   } catch (error) {
@@ -66,10 +66,10 @@ async function searchViewPost(req, res) {
     const keyword = req.query.keyword;
     let PostLists;
     if (keyword) {
-      PostLists = await migrations.searchViewPostByKeyword(keyword);
+      PostLists = await migrationsPost.searchViewPostByKeyword(keyword);
       console.log(keyword);
     } else {
-      PostLists = await migrations.searchViewPost();
+      PostLists = await migrationsPost.searchViewPost();
     }
     res.status(200).json(PostLists);
   } catch (error) {
@@ -82,9 +82,9 @@ const PostDetailByPostId = async (req, res) => {
   try {
     const postId = req.params.postId;
 
-    const post = await migrations.PostDetailByPostId(postId);
+    const post = await migrationsPost.PostDetailByPostId(postId);
 
-    const otherPosts = await migrations.PostByCompanyId(
+    const otherPosts = await migrationsPost.PostByCompanyId(
       post.company.id,
       postId,
     );

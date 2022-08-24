@@ -3,7 +3,6 @@ const migrationsApply = require('../migrations/apply.js');
 const createApply = async (req, res) => {
   try {
     const { postId, userId } = req.body;
-    console.log(postId, userId);
     const applyList = await migrationsApply.ApplyByUserIdPostId(postId, userId);
 
     if (applyList) {
