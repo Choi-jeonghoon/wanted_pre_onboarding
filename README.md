@@ -1,5 +1,4 @@
 # wanted_pre_onboarding
-# BoradAPI
 
 ## 사용 기술스택
 
